@@ -3,8 +3,6 @@ import requests
 import json 
 from time import sleep
 
-
-# Create an Extractor by reading from the YAML file
 e = Extractor.from_yaml_file('search_results.yml')
 
 product = input("Enter your product: ")
@@ -33,7 +31,7 @@ def scrape(url):
     # Download the page using requests
     print("Downloading %s"%url)
     r = requests.get(url, headers=headers)
-    # Simple check to check if page was blocked (Usually 503)
+    # Simple check to check if page was blocked 
     if r.status_code > 500:
         if "To discuss automated access to Amazon data please contact" in r.text:
             print("Page %s was blocked by Amazon. Please try using better proxies\n"%url)
@@ -43,7 +41,6 @@ def scrape(url):
     # Pass the HTML of the page and create 
     return e.extract(r.text)
 
-# product_data = []
 with open("search_results_urls.txt",'r') as urllist, open('search_results_output.jsonl','w') as outfile:
     for url in urllist.read().splitlines():
         data = scrape(url) 
@@ -53,5 +50,5 @@ with open("search_results_urls.txt",'r') as urllist, open('search_results_output
                 print("Saving Product: %s"%product['title'])
                 json.dump(product,outfile)
                 outfile.write("\n")
-                # sleep(5)
+                
     
